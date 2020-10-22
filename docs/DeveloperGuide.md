@@ -133,6 +133,14 @@ Classes used by multiple components are in the `seedu.stock.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### General Features
+General features that are used in many of the implemented features are defined here.
+
+#### StockBookParser
+The `StockBookParser` is used to parse a full user input to determine if the user input corresponds to any of the
+`COMMAND_WORD` in the various command classes. If the the user input does not conform the any of the expected format
+required, Warenager will produce an error message.
+
 ### Suggestion Feature
 
 The mechanism for suggestion feature is facilitated by `SuggestionCommandParser, SuggestionCommand, SuggestionUtil`.
@@ -169,7 +177,7 @@ Some of the important operations implemented here are:
 * `SuggestionCommandParser#generateHelpSuggestion()` <br>
   Generates the suggestion message for a help command.
 * `SuggestionCommandParser#generateExitSuggestion()` <br>
-  Generates the suggestion message for an exit command.
+  Generates the suggestion message for a exit command.
 * `SuggestionCommandParser#generateUpdateSuggestion()` <br>
   Generates the suggestion message for an update command.
 * `SuggestionCommandParser#generateDeleteSuggestion()` <br>
@@ -385,6 +393,206 @@ The following activity diagram summarizes what happens when the suggestion featu
   * Cons: The distance estimate between two strings is quite bad, especially if no substring overlaps. Slow in speed
     compared to minimum edit distance. Generates worse suggestion compared to minimum edit distance.
 
+### Statistics Feature
+
+The backend mechanism for statistics feature is facilitated by `StockBookParser, StatisticsCommandParser, StatisticsCommand`
+and one of the child command classes of StatisticsCommand that includes (as of documentation):
+* `SourceStatisticsCommand`
+* `SourceQuantityDistributionStatisticsCommand`  
+
+The frontend mechanism for statistics feature mainly facilitated by the controller class `StatisticsWindow` for
+`StatisticsWindow.fxml`. The choice of display is `JavaFX Piechart` from the `JavaFX Charts`.
+
+#### StatisticsCommandParser
+`StatisticsCommandParser` class extends `Parser` interface. `StatisticsCommandParser` class is tasked with parsing the
+user inputs (without the command word) and generates a new `StatisticsCommand` object. The `StatisticsCommand` will be one of the
+existing child commands stated above.
+
+Upon successful parsing, the `StatisticsCommand` object will then be passed on to the respective child command classes
+for logical execution.
+
+If the user inputs do not correspond to any of the `STATISTICS_TYPE` words in the child command classes, an error message
+will be shown and no `StatisticsCommand` object will be created.
+
+Some of the more important operations implemented here are:
+
+* `StatisticsCommandParser#parse()` <br>
+  Parses the user input and returns a new `StatisticsCommand` object that can be belongs to either one of the
+  child classes of `StatisticsCommand`. This is aided by the `StatisticsCommandParser#getStatisticsType()` method.
+  
+* `StatisticsCommandParser#getStatisticsType()` <br>
+  This is a further abstracted method that reads the input string and determines what is the correct statistical type
+  command that the user wants.
+  
+:warning: It is to note that some child classes requires parameters in their constructors for their respective purposes.
+  
+#### StatisticsCommand
+
+`StatisticsCommand` abstract class extends `Command` interface. While the `StatisticsCommand` class contains minimal
+functionality, it serves as an inheritance bridge between the various types of statistics command, to comply with
+`SOLID` principles.
+
+The respective child classes will be tasked with consolidating the required data and storing it in a `CommandResult` object.
+
+#### SourceStatisticsCommand
+`SourceStatisticsCommand` class extends `StatisticsCommand` class. The `SourceStatisticsCommand` class is tasked with
+consolidating the required data and storing it in a `CommandResult` object. The statistics shown by this class
+describes the **percentage of the different sources** existing in Warenager.
+
+The format for this command is fixed and is ensured by the parser. Any errors arising from this command will be an
+assertion error.
+
+The main operation implemented in `SourceStatisticsCommand` class is:
+* `SourceStatisticsCommand#execute()`
+  Generates a new `CommandResult`. Some key attributes of this object consists of:
+   1. `statisticsData` The statistics data to be displayed.
+   2. `otherStatisticsDetails` that includes:
+        * Statistics type
+
+#### SourceQuantityDistributionStatisticsCommand
+`SourceQuantityDistributionStatisticsCommand` class extends `StatisticsCommand` class. The
+`SourceQuantityDistributionStatisticsCommand` requires a single parameter: `targetSource`. The statistics shown by this class
+describes the **distribution among the different stocks** of the given `targetSource`.
+
+If the `targetSource` is not found by Warenager, this will result in an error message to be shown to prompt the
+user that Warenager cannot find the target source company.
+
+The main operation implemented in `SourceQuantityDistributionStatisticsCommand` class is:
+* `SourceQuantityDistributionStatisticsCommand#execute()`
+  Generates a new `CommandResult`. The key attributes of this object consists of:
+   1. `statisticsData` The statistics data to be displayed.
+   2. `otherStatisticsDetails` that includes:
+        * Statistics type
+        * Target source
+  
+#### StatisticsWindow
+`StatisticsWindow` is the controller class for the `StatisticsWindow.fxml`. Here, the piechart in the class is updated
+with the correct data corresponding to the command the user inputs. The title will also be customised to the
+type of statistics the user wants to display. The compiled data from the `CommandResult` returned by the `#execute`
+methods will be read here and supplied to the pie chart.
+
+Some of the more important operations implemented here are:
+
+* `StatisticsWindow#refreshData()` <br>
+  This method clears all the current data in the piechart and inserts the correct data depending on the Statistics type
+  from `otherStatisticsDetails` in the `CommandResult` object. It then calls the respective methods needed to extract
+  the compiled data.
+  
+* `StatisticsCommandParser#updateDataForSourceQuantityDistributionStatistics()` <br>
+  This method is called if the type of statistics is `SourceQuantityDistribution Statistics`. Some calculations are done
+  here to provide users with more data.
+  
+* `StatisticsCommandParser#updateDataForSourceStatistics()` <br>
+  This method is called if the type of statistics is `Source Statistics`. Some calculations are done here to provide users
+  with more data.
+  
+#### Example Usage Scenario
+
+Given below are some example usage scenarios and how the statistics mechanism behaves at each step.
+
+**Example 1: Calling statistics for Source Companies**
+
+Step 1. The user enters `stats st/source`.
+
+Step 2. The command word `stats` is extracted out in `StockBookParser`, in this case, it matches the `COMMAND_WORD`,
+        which is `stats` in the `StatisticsCommand` class.
+
+Step 3. The remaining user input is the given to the `StatisticsCommandParser` to determine which type of statistics
+        the user wants.
+
+Step 4. Inside `StatisticsCommandParser#parse()` method, the header will be dropped, resulting in the remaining user
+        input to be `source`. This matches to the criteria for `SourceStatisticsCommand`, and returning a
+        `SourceStatisticsCommand` object.
+        
+Step 5. The `SourceStatisticsCommand#execute()` is then called by the `Logic Manager`. Data extraction and compilation
+        will be done and stored in the returning `CommandResult` object. The `CommandResult` object will also store
+        the type of statistics in `otherStatisticsDetails`, in this case will be `source`, for later usage.
+
+Step 6. When the `UiManager` calls the `SourceQuantityDistributionStatisticsCommand#execute()` method, this will invoke
+        `MainWindow#execute()`. This `CommandResult` is of the statistics class, leading to the `MainWindow#handleStatistics()`
+         method call. This leads to the `StatisticsWindow#show()` method call.
+
+Step 7. `StatisticsWindow#show()` will then call the `StatisticsWindow#refreshData()` which in turn will determine display the
+        data in the desired format, based on the type of statistics from `otherStatisticsDetails` in `CommandResult` from Step 5.
+        In this case, `Source Statistics` will be displayed.
+
+Step 8. This will then update the pie chart with both the relevant data, format, and title to suit the type of statistics
+        to be shown. The UI of the window to be shown is customised by the styling based on the `StatisticsWindow.fxml` file.
+     
+Step 9. The updated piechart will be shown in a popup window.
+
+**Example 2: Calling statistics for Source Quantity Distribution**
+
+Step 1. The user enters `stats st/source-qt-ntuc`. `ntuc` is a valid source that exists in Warenager.
+
+Step 2. The command word `stats` is extracted out in `StockBookParser`, in this case, it matches the `COMMAND_WORD`,
+        which is `stats` in the `StatisticsCommand` class.
+
+Step 3. The remaining user input is the given to the `StatisticsCommandParser` to determine which type of statistics
+        the user wants.
+
+Step 4. Inside `StatisticsCommandParser#parse()` method, the header will be dropped, resulting in the remaining user
+        input to be `source-qt-ntuc`. This matches to the criteria for `SourceQuantityDistributionStatisticsCommand`,
+        and returning a `SourceQuantityDistributionStatisticsCommand` object.
+        
+Step 5. The `SourceQuantityDistributionStatisticsCommand#execute()` is then called by the `Logic Manager`. Data
+        extraction and compilation will be done and stored in the returning `CommandResult` object. The `CommandResult` object
+        will also store the type of statistics in `otherStatisticsDetails`, in this case will be `source-qt-`, for later usage.
+        For this command, the `targetSource` will also be stored in `otherStatisticsDetails` as it is needed to customise the
+        title for the piechart.
+
+Step 6. When the `UiManager` calls the `SourceQuantityDistributionStatisticsCommand#execute()` method, this will invoke
+        `MainWindow#execute()`. This `CommandResult` is of the statistics class, leading to the `MainWindow#handleStatistics()`
+        method call. This leads to the `StatisticsWindow#show()` method call.
+
+Step 7. `StatisticsWindow#show()` will then call the `StatisticsWindow#refreshData()` which in turn will determine display the
+        data in the desired format, based on the type of statistics from `otherStatisticsDetails` in `CommandResult` from Step 5.
+        In this case, `Source Quantity Distribution Statistics` will be displayed.
+
+Step 8. This will then update the pie chart with both the relevant data, format, and title to suit the type of statistics
+        to be shown. The UI of the window to be shown is customised by the styling based on the `StatisticsWindow.fxml` file.
+     
+Step 9. The updated piechart will be shown in a popup window.
+
+#### Sequence Diagram
+
+The following sequence diagram shows how the Logic aspect of the statistics feature works for **Example 1**:
+
+![Statistics-Logic Example 1](images/StatisticsCommandSequenceDiagramLogicExample1.png)
+
+The following sequence diagram shows how the Ui aspect of the statistics feature works for **Example 1**:
+
+![Statistics-Ui Example 1](images/StatisticsCommandSequenceDiagramUiExample1.png
+
+#### Activity Diagram
+
+The following activity diagram summarizes what happens when the statistics feature is triggered:
+
+![StatisticsActivityDiagram](images/StatisticsActivityDiagram.png)
+
+#### Design Considerations
+
+##### Aspect: UI view for statistics
+
+* **Alternative 1 (current implementation):** Pop up window.
+  * Pros: Window can be resized for clearer view. Reduces panel usage since it does not share a common space
+          with the stockcards display.
+  * Cons: May impede typing speed if statistics are viewed very often.
+
+* **Alternative 2:** Side-by-side view beside the stock cards.
+  * Pros: Reduce interruption between typing.
+  * Cons: Statistical views are not often used but rather, only after huge changes over time. In order to display the
+          piechart properly, there needs to be a sufficiently large area. This leads to a huge portion of display space
+          not being utilised efficiently when other commands are being used.
+    
+##### Aspect: Choice of charts as the primary display for statistics
+Pie chart is being used as the choice of statistical display to aid the lack of relativity between stocks
+in Warenager. Absolute numbers of each stock is already displayed by the stockcards in Warenager. Pie charts
+are more useful when working out the compositions of the data.
+
+#### Future statistical features
+With the expansion of more data fields for each stock, there will be more varieties of statistics that can be
+shown based on these new fields.
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -1171,7 +1379,7 @@ testers are expected to do more *exploratory* testing.
 1. Adding a stock into the inventory.
 
    1. Test case: `n/Banana s/NUS q/9999 l/Fruit Section`<br>
-      Expected: New stock added: Banana SerialNumber: 12 Source: NUS Quantity: 9999 Location: Fruit Section.
+      Expected: New stock added: Banana SerialNumber: NUS1 Source: NUS Quantity: 9999 Location: Fruit Section.
       Details of the added stock shown in the status message.
 
    1. Test case: `add n/Banana s/NUS q/9999 l/`<br>
@@ -1362,16 +1570,28 @@ testers are expected to do more *exploratory* testing.
        Expected: A pie chart describing the distribution of source companies for the entire inventory is popped up.
        Details of the successful generation of statistics are shown in the status message.
 
-    1. Test case: `stats st/source-qt-ntuc` (the source company `ntuc` exists) <br>
+    1. Test case: `stats st/source-qd-ntuc` (the source company `ntuc` exists) <br>
        Expected: A pie chart describing the distribution of stocks in `ntuc` is popped up.
        Details of the successful generation of statistics are shown in the status message.
 
-    1. Test case: `stats st/source-qt-fair price` (the source company `fair price` does not exist)<br>
+    1. Test case: `stats st/source-qd-fair price` (the source company `fair price` does not exist)<br>
        Expected: No pop ups describing the statistics will be given or shown.
        Error details shown in the status message. Suggestion message will be shown too.
 
    1. Other incorrect statistics commands to try: `stats`, `stats st/absdsa`, `stats st/source st/source`
       Expected: Similar to previous.
+      
+### Generating unique serial number
+
+1. Generating serial number for a newly added stock.
+
+    1. Test case: `n/Crabs s/Giant q/99 l/Seafood Section`<br> (source `Giant` has been used `50` times)
+      Expected: New stock added: Crabs SerialNumber: Giant51 Source: Giant Quantity: 99 Location: Seafood Section.
+      Details of the added stock shown in the status message.
+
+    1. Test case: `n/Peaches s/Market q/500 l/Fruits Section`<br> (source `Market` has never been used)
+      Expected: New stock added: Peaches SerialNumber: Market51 Source: Market Quantity: 500 Location: Fruits Section.
+      Details of the added stock shown in the status message.
 
 ### Adding note to stock
 

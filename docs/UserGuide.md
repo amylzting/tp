@@ -268,11 +268,12 @@ Command: `note sn/ntuc1 nt/banana just arrived` will add note with index 1 in no
 ![banana note 1](images/add_note1_to_banana.png)
 
 ### Deleting note(s) from stock: `notedelete`
-Deletes a note, specified by the note's index, from the stock specified.
+Deletes a note, specified by the note's index, from the stock specified by its serial number..
 * Required fields:
     1. Serial number of stock
-    2. Note index of note to delete 
-⚠ Note index must be an integer. 
+    2. Note index of note to delete
+
+⚠ Note index must be an integer.
 To delete ALL notes from a stock, note index to specify is 0.
 
 Format: `notedelete sn/<serial number> ni/<note index>`
@@ -302,7 +303,15 @@ Format: `stats `, followed by one of the following:
 **st/source** | Distribution of source companies.
 **st/source-qd-<source company>** | Distribution of stocks for the target source company.
 
-e.g. `stats st/source`, `stats st/source-qd-ntuc`
+e.g. `stats st/source`, `stats st/source-qd-abc`
+
+* Command: `stats st/source`: <br>
+
+![SourceStatistics](images/SourceStatistics.png)
+
+* Command: `stats st/source-qd-abc` (`abc` exists with the shown items): <br>
+
+![SourceQuantityDistributionStatistics](images/SourceQuantityDistributionStatistics.png)
 
 ### Generates a csv file that contains all stocks: `print`
 Generates a csv file that contains all stocks. Users may want to sort the stock using `sort` command

@@ -1,0 +1,28 @@
+@startuml
+start
+:User enters command;
+
+:Warenager passes command input \n to their respective parsers.;
+
+if () then ([stats command])
+    :StatisticsParser determines the \n type of statistics command;
+    if () then ([valid input])
+        if () then ([source])
+            :Source statistics data generated;
+            :Ui for source statistics popup;
+        else ([source-qd])
+            :Warenager checks if source exists;
+                if () then ([exists])
+                    :Source quantity distribution \n statistics data generated;
+                    :Ui for Source quantity distribution \n statistics popup;
+                else ([dont exist])
+            endif
+        endif
+    else ([invalid input])
+    endif
+else ([non-stats command])
+
+endif
+stop
+
+@enduml

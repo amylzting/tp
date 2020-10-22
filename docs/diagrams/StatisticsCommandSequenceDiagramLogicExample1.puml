@@ -1,0 +1,42 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":StockBookParser" as StockBookParser LOGIC_COLOR
+participant ":StatisticsCommandParser" as StatisticsCommandParser LOGIC_COLOR
+participant ":SourceStatisticsCommand" as SourceStatisticsCommand LOGIC_COLOR
+end box
+
+[-> LogicManager : execute()
+activate LogicManager
+
+LogicManager -> StockBookParser : parseCommand()
+activate StockBookParser
+
+create StatisticsCommandParser
+StockBookParser -> StatisticsCommandParser
+activate StatisticsCommandParser
+
+StatisticsCommandParser -> StatisticsCommandParser : parse(args)
+activate StatisticsCommandParser
+
+create SourceStatisticsCommand
+StatisticsCommandParser -> SourceStatisticsCommand
+activate SourceStatisticsCommand
+
+SourceStatisticsCommand --> StatisticsCommandParser
+deactivate SourceStatisticsCommand
+
+StatisticsCommandParser --> StatisticsCommandParser
+deactivate StatisticsCommandParser
+
+StatisticsCommandParser --> StockBookParser
+deactivate StatisticsCommandParser
+
+StockBookParser --> LogicManager
+deactivate StockBookParser
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

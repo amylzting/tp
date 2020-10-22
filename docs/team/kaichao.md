@@ -36,7 +36,9 @@ Given below are my contributions to the project.
   * User Guide:
     * Converted the draft user guide content to markdown file format.
     * Updated the documentation for `delete` feature.
+    * Updated the documentation for `stats` feature.
   * Developer Guide:
     * Updated NFR and Appendix section for Warenager.
-    * Added MSS for delete feature.
-    * Added implementation details of the `delete` feature.
+    * Added MSS for `delete` and `stats` feature.
+    * Added use cases for `delete` and `stats` feature.
+    * Added implementation details of the `stats` feature.
