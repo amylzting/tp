@@ -224,21 +224,21 @@ public class UpdateCommandTest {
                 .withName(VALID_NAME_APPLE).withSerialNumber(VALID_SERIAL_NUMBER_APPLE).build();
         final UpdateCommand standardCommand = new UpdateCommand(descriptor);
 
-        // same values -> returns true
+        // EP: same values -> returns true
         UpdateStockDescriptor copyDescriptor = new UpdateStockDescriptor(descriptor);
         UpdateCommand commandWithSameValues = new UpdateCommand(copyDescriptor);
         assertTrue(standardCommand.equals(commandWithSameValues));
 
-        // same object -> returns true
+        // EP: same object -> returns true
         assertTrue(standardCommand.equals(standardCommand));
 
-        // null -> returns false
+        // EP: null -> returns false
         assertFalse(standardCommand.equals(null));
 
-        // different types -> returns false
+        // EP: different types -> returns false
         assertFalse(standardCommand.equals(new ClearCommand()));
 
-        // different descriptor -> returns false
+        // EP: different descriptor -> returns false
         assertFalse(standardCommand.equals(new UpdateCommand(differentDescriptor)));
     }
 }

@@ -22,6 +22,7 @@ public class CommandWords {
     public static final String NOTE_DELETE_COMMAND_WORD = "notedelete";
     public static final String NOTE_VIEW_COMMAND_WORD = "noteview";
     public static final String SORT_COMMAND_WORD = "sort";
+    public static final String TAB_COMMAND_WORD = "tab";
 
 
     /**
@@ -48,6 +49,7 @@ public class CommandWords {
         allCommandWords.add(NOTE_VIEW_COMMAND_WORD);
         allCommandWords.add(SORT_COMMAND_WORD);
         allCommandWords.add(PRINT_COMMAND_WORD);
+        allCommandWords.add(TAB_COMMAND_WORD);
         return allCommandWords;
     }
 }

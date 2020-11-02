@@ -7,6 +7,7 @@ import static seedu.stock.model.Model.PREDICATE_SHOW_ALL_STOCKS;
 import static seedu.stock.testutil.Assert.assertThrows;
 import static seedu.stock.testutil.TypicalStocks.APPLE;
 import static seedu.stock.testutil.TypicalStocks.BANANA;
+import static seedu.stock.testutil.TypicalStocks.ORANGE;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import seedu.stock.commons.core.GuiSettings;
 import seedu.stock.model.stock.AccumulatedQuantity;
 import seedu.stock.model.stock.SerialNumberSet;
+import seedu.stock.model.stock.Source;
 import seedu.stock.model.stock.predicates.NameContainsKeywordsPredicate;
 import seedu.stock.testutil.SerialNumberSetsBookBuilder;
 import seedu.stock.testutil.StockBookBuilder;
@@ -32,6 +34,88 @@ public class ModelManagerTest {
         assertEquals(new StockBook(), new StockBook(modelManager.getStockBook()));
         assertEquals(new SerialNumberSetsBook(),
                 new SerialNumberSetsBook(modelManager.getSerialNumberSetsBook()));
+    }
+
+    @Test
+    public void setStockBook() {
+        StockBook newStockBook = new StockBook();
+        newStockBook.addStock(ORANGE);
+        modelManager.addStock(APPLE);
+        modelManager.addStock(BANANA);
+        modelManager.setStockBook(newStockBook);
+        assertTrue(modelManager.hasStock(ORANGE));
+        assertFalse(modelManager.hasStock(BANANA));
+        assertFalse(modelManager.hasStock(APPLE));
+    }
+
+    @Test
+    public void deleteStock() {
+        modelManager.addStock(APPLE);
+        assertTrue(modelManager.hasStock(APPLE));
+        modelManager.deleteStock(APPLE);
+        assertFalse(modelManager.hasStock(APPLE));
+    }
+
+    @Test
+    public void setStock() {
+        modelManager.addStock(APPLE);
+        modelManager.setStock(APPLE, ORANGE);
+        assertTrue(modelManager.hasStock(ORANGE));
+        assertFalse(modelManager.hasStock(APPLE));
+    }
+
+    @Test
+    public void setSerialNumberSetsBook() {
+        SerialNumberSet newSerialNumberSet = new SerialNumberSet(new Source("alpha"), new AccumulatedQuantity("4"));
+        SerialNumberSetsBook newSerialNumberSetsBook = new SerialNumberSetsBook();
+        newSerialNumberSetsBook.addSerialNumberSet(newSerialNumberSet);
+        modelManager.setSerialNumberSetsBook(newSerialNumberSetsBook);
+        assertEquals(newSerialNumberSetsBook, modelManager.getSerialNumberSetsBook());
+    }
+
+    @Test
+    public void hasSerialNumberSet() {
+        SerialNumberSet newSerialNumberSet = new SerialNumberSet(new Source("alpha"), new AccumulatedQuantity("4"));
+        assertFalse(modelManager.hasSerialNumberSet(newSerialNumberSet));
+        modelManager.addSerialNumberSet(newSerialNumberSet);
+        assertTrue(modelManager.hasSerialNumberSet(newSerialNumberSet));
+    }
+
+    @Test
+    public void deleteSerialNumberSet() {
+        SerialNumberSet newSerialNumberSet = new SerialNumberSet(new Source("alpha"), new AccumulatedQuantity("4"));
+        modelManager.addSerialNumberSet(newSerialNumberSet);
+        assertTrue(modelManager.hasSerialNumberSet(newSerialNumberSet));
+        modelManager.deleteSerialNumberSet(newSerialNumberSet);
+        assertFalse(modelManager.hasSerialNumberSet(newSerialNumberSet));
+    }
+
+    @Test
+    public void updateSerialNumberSet() {
+        SerialNumberSet newSerialNumberSet = new SerialNumberSet(new Source("alpha"), new AccumulatedQuantity("4"));
+        modelManager.addSerialNumberSet(newSerialNumberSet);
+        modelManager.updateSerialNumberSet(new Source("alpha"));
+        assertEquals(modelManager.getSerialNumberSetsBook().getSerialNumberSetsList().get(0).getAccumulatedQuantity(),
+                new AccumulatedQuantity("5"));
+    }
+
+    @Test
+    public void generateNextSerialNumber() {
+        SerialNumberSet newSerialNumberSet = new SerialNumberSet(new Source("alpha"), new AccumulatedQuantity("4"));
+        modelManager.addSerialNumberSet(newSerialNumberSet);
+        String actualSerialNumber = modelManager.generateNextSerialNumber(new Source("alpha"));
+        String expectedSerialNumber = "alpha5";
+        assertEquals(actualSerialNumber, expectedSerialNumber);
+    }
+
+    @Test
+    public void setSerialNumberSet() {
+        SerialNumberSet newSerialNumberSet = new SerialNumberSet(new Source("alpha"), new AccumulatedQuantity("4"));
+        modelManager.addSerialNumberSet(newSerialNumberSet);
+        SerialNumberSet updatedSerialNumberSet = new SerialNumberSet(new Source("beta"), new AccumulatedQuantity("4"));
+        modelManager.setSerialNumberSet(newSerialNumberSet, updatedSerialNumberSet);
+        assertFalse(modelManager.hasSerialNumberSet(newSerialNumberSet));
+        assertTrue(modelManager.hasSerialNumberSet(updatedSerialNumberSet));
     }
 
     @Test

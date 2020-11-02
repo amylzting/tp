@@ -1,5 +1,6 @@
 package seedu.stock.logic.commands;
 
+import seedu.stock.logic.commands.exceptions.CommandException;
 import seedu.stock.model.Model;
 
 public class SuggestionCommand extends Command {
@@ -22,9 +23,9 @@ public class SuggestionCommand extends Command {
      * @return A command result to be passed to the user.
      */
     @Override
-    public CommandResult execute(Model model) {
+    public CommandResult execute(Model model) throws CommandException {
         model.updateFilteredStockList(Model.PREDICATE_SHOW_ALL_STOCKS);
-        return new CommandResult(toBeDisplayed);
+        throw new CommandException(toBeDisplayed);
     }
 
     @Override

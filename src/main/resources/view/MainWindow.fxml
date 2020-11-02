@@ -16,7 +16,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8"
          xmlns:fx="http://javafx.com/fxml/1"
-         title="Warenager" minWidth="1010" minHeight="600" maxHeight="1200"
+         title="Warenager" minWidth="1010" minHeight="600"
          onCloseRequest="#handleExit">
     <icons>
         <Image url="@/images/Warenager-Icon.png"/>
@@ -27,21 +27,19 @@
                 <URL value="@LightTheme.css"/>
                 <URL value="@ExtensionsLight.css"/>
             </stylesheets>
-            <VBox>
-                <TabPane fx:id="tabPane">
+            <VBox >
+                <TabPane fx:id="tabPane" VBox.vgrow="NEVER">
                     <Tab text="Data" closable="false">
                         <VBox>
                             <VBox fx:id="stockList" styleClass="pane-with-border"
                                   VBox.vgrow="ALWAYS">
-                                <padding>
-                                    <Insets top="5" bottom="5"/>
-                                </padding>
-                                <StackPane fx:id="stockListPanelPlaceholder" VBox.vgrow="ALWAYS"/>
+                                <StackPane fx:id="stockListPanelPlaceholder" VBox.vgrow="ALWAYS"
+                                           styleClass="pane-with-border"/>
                             </VBox>
 
                             <StackPane VBox.vgrow="ALWAYS" fx:id="resultDisplayPlaceholder"
                                        styleClass="pane-with-border"
-                                       minHeight="120" prefHeight="120" maxHeight="150">
+                                       minHeight="120" >
                                 <padding>
                                     <Insets top="5" right="5" bottom="5" left="5"/>
                                 </padding>

@@ -218,16 +218,22 @@ list lt/<list type>
 <h4>Examples</h4>
 
 ```
+list lt/all
+```
+
+![list_all](images/list_all.png)
+
+```
 list lt/bookmark
 ```
 
 ![list_bookmark](images/list_bookmark.png)
 
 ```
-list lt/all
+list lt/low
 ```
 
-![list_all](images/list_all.png)
+![list_low](images/list_low.png)
 
 ### Deleting of stock: `delete`
 Deletes the stock(s) using the stock's serial number from the inventory. Multiple stocks can be deleted simultaneously.
@@ -573,12 +579,12 @@ The valid statistics input would be `stats st/source`.
 
 **Before input**:
 
-![statistics_step2](images/statistics/statistics_step2.png)
+![statistics_step1](images/statistics/statistics_step1.png)
 
 
 **After input**:
 
-![statistics_step3](images/statistics/statistics_step3.png)
+![statistics_step2](images/statistics/statistics_step2.png)
 
 Now suppose you want to display source statistics for the source company `courts`. After the input, you
 should notice that the title in the statistics window as highlighted now corresponds to the source company `courts`.<br>
@@ -586,12 +592,12 @@ The valid statistics input would be `stats st/source-qd-courts`.
 
 **Before input**:
 
-![statistics_step4](images/statistics/statistics_step4.png)
+![statistics_step3](images/statistics/statistics_step3.png)
 
 
 **After input**:
 
-![statistics_step5](images/statistics/statistics_step5.png)
+![statistics_step4](images/statistics/statistics_step4.png)
 
 <div markdown="block" class="alert alert-warning" markdown="1">
 
@@ -599,7 +605,7 @@ The valid statistics input would be `stats st/source-qd-courts`.
 If Warenager is first started up, you should expect the following in the **Statistics** tab,
 and this is **intended**:
 
-![statistics_step7](images/statistics/statistics_step7.png)
+![statistics_startup](images/statistics/statistics_startup.png)
 </div>
 
 ### Bookmarking stocks in the list: `bookmark`

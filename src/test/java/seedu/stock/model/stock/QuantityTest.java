@@ -56,7 +56,6 @@ public class QuantityTest {
         assertFalse(notLowQuantity.isLowOnQuantity()); // comparing with default low quantity
         notLowQuantity = new Quantity("100", "10");
         assertFalse(notLowQuantity.isLowOnQuantity()); // comparing after changing low quantity value
-
     }
 
     @Test
@@ -71,7 +70,5 @@ public class QuantityTest {
 
         // returns false, lowQuantity edited
         assertFalse(quantity.equals(quantityWithLowQuantity));
-
-
     }
 }

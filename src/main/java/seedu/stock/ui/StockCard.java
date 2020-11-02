@@ -37,6 +37,8 @@ public class StockCard extends UiPart<Region> {
     @FXML
     private Label quantity;
     @FXML
+    private Label lowQuantity;
+    @FXML
     private Label locationStored;
     @FXML
     private Label source;
@@ -58,6 +60,8 @@ public class StockCard extends UiPart<Region> {
         String serial = stock.getSerialNumber().getSerialNumberAsString().toUpperCase();
         serialNumber.setText(serial);
         quantity.setText(stock.getQuantity().quantity);
+
+        lowQuantity.setText(stock.getQuantity().getLowQuantity());
 
         String sourceName = upperFirst(stock.getSource().value);
         source.setText(sourceName);

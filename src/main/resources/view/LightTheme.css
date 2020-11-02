@@ -39,7 +39,8 @@
 
 .tab-pane .tab {
     -fx-background-color: #e6e6e6;
-    -fx-padding: 4   10 5 10;
+    -fx-padding: 4 10 5 10;
+    -fx-width: 10;
     -fx-border-color: #c2c2c2 #c2c2c2 #c2c2c2;
     -fx-border-radius: 5 5 0 0;
 }
@@ -136,7 +137,12 @@
 .list-cell-element {
     -fx-border-width: 0 0 0 1;
     -fx-border-color: #000000;
-    -fx-padding: 2 2 2 2;
+}
+
+.list-cell-quantity {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #000000;
+    -fx-padding: 0 0 0 0;
 }
 
 
@@ -144,6 +150,7 @@
     -fx-font-family: "Montserrat";
     -fx-font-size: 14px;
     -fx-text-fill: #000000;
+    -fx-padding: 2 2 2 2;
 }
 
 .list-cell-text-low {
@@ -151,21 +158,33 @@
     -fx-font-size: 14px;
     -fx-text-fill: #ff0000;
     -fx-font-weight: bold;
+    -fx-padding: 2 2 2 2;
 }
 
 .list-cell-header {
     -fx-border-width: 0 0 0 1;
     -fx-border-color: #000000;
-    -fx-padding: 0 0 2 2;
+    -fx-padding: 0 0 2 0;
+    -fx-background-color: #a3a1a1;
+}
+
+.list-cell-header-quantity {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #000000;
+    -fx-padding: 0 0 0 0;
     -fx-background-color: #a3a1a1;
 }
 
 .list-cell-header-text {
     -fx-font-family: "Quicksand";
     -fx-text-fill: #181717;
-    -fx-font-size: 16 px;
+    -fx-font-size: 14 px;
     -fx-font-weight: bold;
+    -fx-padding: 0 0 0 2;
 }
+
+
+
 
 .list-cell:filled:even {
     -fx-background-color: #e7eaea;

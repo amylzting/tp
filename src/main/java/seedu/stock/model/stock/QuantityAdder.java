@@ -37,6 +37,7 @@ public class QuantityAdder {
      * @return A boolean value indicating if the test passes.
      */
     public static boolean isValidValue(String test) {
+        requireNonNull(test);
         try {
             //protective layer against huge string input.
             Integer.parseInt(test);
